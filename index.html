@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediGrow - Home Medicinal Plants</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="auth-styles.css">
+    <link rel="stylesheet" href="modal-fix.css">
+    <link rel="stylesheet" href="scanner-styles.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                <span>MediGrow</span>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#plants">Plant Library</a></li>
+                    <li><a href="#scanner">Plant Scanner</a></li>
+                    <li><a href="#weather">Weather Guide</a></li>
+                    <li><a href="#forum">Community</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#auth">Login/Register</a></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Grow Your Own Medicinal Garden</h1>
+                    <p>Discover how to cultivate healing plants at home with our comprehensive guides and smart tools
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#scanner" class="btn primary-btn">Identify Plants</a>
+                        <a href="#plants" class="btn outline-btn">Explore Plants</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae" alt="Medicinal plants">
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">Why Grow Medicinal Plants?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-heartbeat"></i>
+                        <h3>Natural Remedies</h3>
+                        <p>Access to safe, natural treatments for common ailments right from your garden</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-seedling"></i>
+                        <h3>Sustainable Living</h3>
+                        <p>Reduce your reliance on commercial medicines and lower your carbon footprint</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-dollar-sign"></i>
+                        <h3>Cost Effective</h3>
+                        <p>Save money by growing your own medicinal herbs instead of buying them</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-brain"></i>
+                        <h3>Therapeutic Benefits</h3>
+                        <p>Gardening itself has proven mental health benefits and reduces stress</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plant Scanner Section -->
+        <section class="scanner-section" id="scanner">
+            <div class="container">
+                <h2 class="section-title">Plant Identification Scanner</h2>
+                <p class="section-subtitle">Identify medicinal plants and get care instructions instantly</p>
+
+                <div class="scanner-container">
+                    <div class="scanner-box">
+                        <div class="scanner-view" id="scannerView">
+                            <video id="scannerVideo" autoplay playsinline></video>
+                            <canvas id="scannerCanvas" style="display: none;"></canvas>
+                            <div class="scanner-overlay">
+                                <div class="scan-box">
+                                    <div class="scan-line"></div>
+                                </div>
+                                <p>Align plant within the frame</p>
+                            </div>
+                        </div>
+                        <div class="scanner-controls">
+                            <button id="startScanner" class="btn primary-btn">
+                                <i class="fas fa-camera"></i> Start Scanner
+                            </button>
+                            <button id="captureImage" class="btn secondary-btn" disabled>
+                                <i class="fas fa-camera-retro"></i> Capture
+                            </button>
+                            <input type="file" id="uploadImage" accept="image/*" style="display: none;">
+                            <button id="uploadBtn" class="btn outline-btn">
+                                <i class="fas fa-upload"></i> Upload Image
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-box" id="resultsBox">
+                        <div class="scan-status"></div>
+                        <div class="loading-spinner" id="loadingSpinner"></div>
+                        <div class="placeholder-content">
+                            <i class="fas fa-leaf"></i>
+                            <h3>Plant Identification Results</h3>
+                            <p>Scan or upload an image to see plant details</p>
+                        </div>
+                        <div class="plant-results" id="plantResults" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plant Library Section -->
+        <section class="plant-library" id="plants">
+            <div class="container">
+                <h2 class="section-title">Medicinal Plant Library</h2>
+                <p class="section-subtitle">Explore plants you can grow at home for health benefits</p>
+
+                <div class="plant-filter">
+                    <input type="text" id="plantSearch" placeholder="Search plants...">
+                    <select id="benefitFilter">
+                        <option value="">Filter by health benefit</option>
+                        <option value="digestive">Digestive Health</option>
+                        <option value="respiratory">Respiratory Health</option>
+                        <option value="immune">Immune Boosting</option>
+                        <option value="pain">Pain Relief</option>
+                        <option value="stress">Stress Relief</option>
+                        <option value="skin">Skin Health</option>
+                    </select>
+                    <select id="difficultyFilter">
+                        <option value="">Filter by difficulty</option>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+
+                <div class="plants-grid" id="plantsGrid">
+                    <!-- Plants will be loaded dynamically from JavaScript -->
+                </div>
+
+                <div class="view-all">
+                    <button id="loadMorePlants" class="btn outline-btn">Load More Plants</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Weather Guide Section -->
+        <section class="weather-guide" id="weather">
+            <div class="container">
+                <h2 class="section-title">Weather-Based Growing Guide</h2>
+                <p class="section-subtitle">Get personalized advice based on your local weather conditions</p>
+
+                <div class="weather-container">
+                    <div class="weather-card">
+                        <div class="weather-header">
+                            <h3>Your Local Growing Conditions</h3>
+                            <button id="getLocation" class="btn primary-btn small-btn">
+                                <i class="fas fa-location-arrow"></i> Use My Location
+                            </button>
+                        </div>
+                        <div class="weather-display">
+                            <div class="weather-info" id="weatherInfo">
+                                <div class="weather-icon">
+                                    <i class="wi wi-day-sunny"></i>
+                                </div>
+                                <div class="weather-details">
+                                    <p>Allow location access to view personalized growing advice</p>
+                                    <p>Based on your current weather conditions</p>
+                                </div>
+                            </div>
+                            <div class="weather-plants" id="weatherPlants">
+                                <h4>Recommended Plants for Current Conditions:</h4>
+                                <div class="weather-plants-list"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weather-tips">
+                        <h3>Seasonal Growing Tips</h3>
+                        <div class="tips-container" id="seasonalTips">
+                            <!-- Tips will be loaded based on season -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kitchen Gardening Section -->
+        <section class="kitchen-gardening">
+            <div class="container">
+                <h2 class="section-title">Kitchen Gardening Guides</h2>
+                <p class="section-subtitle">Step-by-step instructions for creating your medicinal herb garden</p>
+
+                <div class="guides-tabs">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="beginner">Beginner's Guide</button>
+                        <button class="tab-btn" data-tab="containers">Container Gardening</button>
+                        <button class="tab-btn" data-tab="indoor">Indoor Herb Garden</button>
+                        <button class="tab-btn" data-tab="harvesting">Harvesting & Storage</button>
+                    </div>
+
+                    <div class="tab-content active" id="beginner">
+                        <h3>Starting Your Medicinal Herb Garden</h3>
+                        <div class="guide-steps">
+                            <div class="guide-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Choose Your Location</h4>
+                                    <p>Most medicinal herbs need at least 6 hours of sunlight per day. Select a spot
+                                        with good drainage and access to water.</p>
+                                    <img
+                                        src="https://i.postimg.cc/MH4Sqxp0/Whats-App-Image-2025-04-21-at-10-21-11-086cd771-a.jpg">
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Start with Easy Plants</h4>
+                                    <p>Begin with hardy, easy-to-grow herbs like peppermint, chamomile, and lemon balm
+                                        that are forgiving for beginners.</p>
+                                    <img src="https://i.postimg.cc/Wz9M4WBw/easy.jpg">
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Prepare Your Soil</h4>
+                                    <p>Medicinal herbs thrive in well-draining soil. Mix garden soil with compost and
+                                        sand if needed for better drainage.</p>
+                                    <img src="https://i.postimg.cc/WbCkfkTz/sp.jpg" alt="Soil preparation">
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Planting & Spacing</h4>
+                                    <p>Follow spacing guidelines for each plant. Some herbs spread aggressively and need
+                                        containment.</p>
+                                    <img src="https://i.postimg.cc/BnZnpZ1b/Whats-App-Image-2025-04-21-plant-spacing.jpg"
+                                        alt="Plant spacing">
+                                </div>
+                            </div>
+                            <div class="guide-step">
+                                <div class="step-number">5</div>
+                                <div class="step-content">
+                                    <h4>Regular Care</h4>
+                                    <p>Water when soil feels dry, prune regularly to encourage growth, and watch for
+                                        pests.</p>
+                                    <img src="https://i.postimg.cc/xCNCmsNP/Whats-App-Image-soil-prep.jpg"
+                                        alt="Garden care">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="containers">
+                        <!-- Container gardening content -->
+                    </div>
+
+                    <div class="tab-content" id="indoor">
+                        <!-- Indoor gardening content -->
+                    </div>
+
+                    <div class="tab-content" id="harvesting">
+                        <!-- Harvesting content -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Forum Section -->
+        <section class="community-forum" id="forum">
+            <div class="container">
+                <h2 class="section-title">Community Forum</h2>
+                <p class="section-subtitle">Connect with other medicinal plant enthusiasts</p>
+
+                <div class="forum-container">
+                    <div class="forum-topics">
+                        <h3>Popular Discussion Topics</h3>
+                        <div class="topics-list">
+                            <div class="topic-card">
+                                <div class="topic-header">
+                                    <h4>Natural Cold Remedies</h4>
+                                    <span class="topic-stats">24 posts</span>
+                                </div>
+                                <p class="topic-desc">Share your favorite herbal remedies for cold and flu season</p>
+                                <div class="topic-meta">
+                                    <span class="topic-author"><i class="fas fa-user"></i> herbal_guru</span>
+                                    <span class="topic-date"><i class="far fa-clock"></i> 2 days ago</span>
+                                </div>
+                            </div>
+                            <div class="topic-card">
+                                <div class="topic-header">
+                                    <h4>Pest Control Solutions</h4>
+                                    <span class="topic-stats">18 posts</span>
+                                </div>
+                                <p class="topic-desc">Natural ways to protect your medicinal plants from pests</p>
+                                <div class="topic-meta">
+                                    <span class="topic-author"><i class="fas fa-user"></i> organic_gardener</span>
+                                    <span class="topic-date"><i class="far fa-clock"></i> 5 days ago</span>
+                                </div>
+                            </div>
+                            <div class="topic-card">
+                                <div class="topic-header">
+                                    <h4>Drying & Storing Herbs</h4>
+                                    <span class="topic-stats">32 posts</span>
+                                </div>
+                                <p class="topic-desc">Best methods for preserving your medicinal herbs</p>
+                                <div class="topic-meta">
+                                    <span class="topic-author"><i class="fas fa-user"></i> herb_preserver</span>
+                                    <span class="topic-date"><i class="far fa-clock"></i> 1 week ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="btn outline-btn">View All Topics</a>
+                    </div>
+
+                    <div class="forum-join">
+                        <h3>Join the Conversation</h3>
+                        <p>Connect with a community of home gardeners growing medicinal plants</p>
+                        <form class="forum-signup">
+                            <input type="text" placeholder="Your Name">
+                            <input type="email" placeholder="Email Address">
+                            <button type="submit" class="btn primary-btn">Create Account</button>
+                        </form>
+                        <div class="forum-benefits">
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Ask questions and get expert advice</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Share your growing experiences</span>
+                            </div>
+                            <div class="benefit-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Learn from other gardeners</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter">
+            <div class="container">
+                <div class="newsletter-content">
+                    <h2>Get Monthly Growing Tips</h2>
+                    <p>Subscribe to our newsletter for seasonal advice, new plant profiles, and exclusive content</p>
+                </div>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address">
+                    <button type="submit" class="btn primary-btn">Subscribe</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="logo">
+                        <i class="fas fa-leaf"></i>
+                        <span>MediGrow</span>
+                    </div>
+                    <p>Empowering you to grow your own natural remedies and live a healthier life through home
+                        gardening.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#plants">Plant Library</a></li>
+                        <li><a href="#scanner">Plant Scanner</a></li>
+                        <li><a href="#weather">Weather Guide</a></li>
+                        <li><a href="#forum">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> hello@medigrow.com</li>
+                        <li><i class="fas fa-phone"></i> 1234567</li>
+                        <li><i class="fas fa-map-marker-alt"></i> chitkara uiversity</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 MediGrow. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Disclaimer</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Plant Details Modal -->
+    <div class="modal" id="plantModal" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body" id="modalPlantContent">
+                <!-- Plant details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Authentication Section -->
+    <section class="auth-section" id="auth">
+        <div class="container">
+            <h2 class="section-title">Account Access</h2>
+            <p class="section-subtitle">Login or create an account to save your favorite plants</p>
+
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="loginForm">Login</button>
+                    <button class="auth-tab" data-tab="registerForm">Register</button>
+                </div>
+
+                <div id="authMessage" class="auth-message" style="display: none;"></div>
+
+                <form id="loginForm" class="auth-form active">
+                    <div class="form-group">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn primary-btn">Login</button>
+                </form>
+
+                <form id="registerForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="registerUsername">Username</label>
+                        <input type="text" id="registerUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn primary-btn">Register</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Profile Section -->
+    <section class="profile-section hidden" id="profile">
+        <div class="container">
+            <h2 class="section-title">My Profile</h2>
+
+            <div class="profile-container">
+                <div class="profile-info" id="userProfileInfo">
+                    <!-- User info will be loaded dynamically -->
+                </div>
+
+                <div class="user-favorites" id="userFavorites">
+                    <!-- Favorites will be loaded dynamically -->
+                </div>
+
+                <div class="profile-actions">
+                    <button id="logoutBtn" class="btn outline-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script src="auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+
+</html>

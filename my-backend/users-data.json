@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "id": "1747477049170",
+      "username": "test",
+      "email": "test@chitkara.com",
+      "password": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+      "favorites": []
+    }
+  ],
+  "tokens": {
+    "1747477049170": "986233bbcde52e44e91cbdcf319e178c71ac04caee6cdd2b10625665794ece40"
+  }
+}
