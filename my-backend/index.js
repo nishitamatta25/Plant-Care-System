@@ -45,26 +45,49 @@ app.use('/api/plants', plantRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 
+const multer = require('multer');
+const FormData = require('form-data');
+const upload = multer({ storage: multer.memoryStorage() });
+
 // Plant API proxy route
-app.post('/api/identify-plant', async (req, res) => {
+app.post('/api/identify-plant', upload.single('images'), async (req, res) => {
     try {
-        const { image } = req.body;
+        if (!req.file) {
+            return res.status(400).json({ success: false, error: 'No image file uploaded' });
+        }
 
-        // In a real implementation, you would:
-        // 1. Process the image data
-        // 2. Call the Plant.id API
-        // 3. Return the results
+        const plantApiKey = process.env.PLANT_API_KEY;
+        if (!plantApiKey || plantApiKey === 'your_plant_id_api_key') {
+             console.error('Missing PlantNet API Key in .env');
+             return res.status(500).json({ success: false, error: 'Server Missing API Key' });
+        }
 
-        // For now, we'll return a mock response
-        const randomIndex = Math.floor(Math.random() * 12) + 1; // Assuming we have 12 plants
-
-        res.json({
-            success: true,
-            plantId: randomIndex
+        const formData = new FormData();
+        formData.append('images', req.file.buffer, {
+            filename: req.file.originalname || 'image.jpg',
+            contentType: req.file.mimetype || 'image/jpeg'
         });
+
+        const url = `https://my-api.plantnet.org/v2/identify/all?api-key=${plantApiKey}`;
+
+        const https = require('https');
+        const response = await axios.post(url, formData, {
+            headers: {
+                ...formData.getHeaders()
+            },
+            httpsAgent: new https.Agent({ rejectUnauthorized: false }) // Bypass local strict SSL/Antivirus interception
+        });
+
+        res.json(response.data);
     } catch (error) {
-        console.error('Plant identification error:', error);
-        res.status(500).json({ success: false, error: 'Failed to identify plant' });
+        console.error('Plant identification proxy error:', error.response?.data || error.message);
+        
+        if (error.response) {
+            res.status(error.response.status).json(error.response.data);
+        } else {
+            // Include the exact axios error message in the fallback response so we can see why it failed locally
+            res.status(500).json({ success: false, error: 'Failed to identify plant', details: error.message });
+        }
     }
 });
 

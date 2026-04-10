@@ -1,0 +1,10 @@
+/* Modal fix to ensure it's hidden by default */
+.modal {
+    display: none !important;
+    /* Use !important to override any other styles */
+}
+
+.modal.show {
+    display: flex !important;
+    /* Only show when the 'show' class is added */
+}

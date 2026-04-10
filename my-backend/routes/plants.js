@@ -39,6 +39,32 @@ router.get('/filter', async (req, res) => {
     }
 });
 
+// @route   GET /api/plants/search
+// @desc    Search plants by name or scientific name
+// @access  Public
+router.get('/search', async (req, res) => {
+    try {
+        const { name } = req.query;
+        if (!name) {
+            return res.status(400).json({ msg: 'Please provide a search term' });
+        }
+
+        // Case-insensitive regex search on both common name and scientific name
+        const match = new RegExp(name, 'i');
+        const plants = await Plant.find({
+            $or: [
+                { name: { $regex: match } },
+                { scientificName: { $regex: match } }
+            ]
+        });
+
+        res.json(plants);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 // @route   GET /api/plants/:id
 // @desc    Get plant by ID
 // @access  Public
