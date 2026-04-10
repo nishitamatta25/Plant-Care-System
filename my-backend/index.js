@@ -100,19 +100,36 @@ app.get('/api/weather', async (req, res) => {
             return res.status(400).json({ success: false, error: 'Latitude and longitude are required' });
         }
 
-        // In a real implementation, you would call the weather API
-        // For now, we'll return mock data
+        const weatherApiKey = process.env.WEATHER_API_KEY;
+        if (!weatherApiKey || weatherApiKey === 'your_weather_api_key') {
+            return res.status(500).json({ success: false, error: 'Server Missing Weather API Key' });
+        }
+
+        // Call OpenWeatherMap API using imperial units to get Fahrenheit (since frontend expects Fahrenheit)
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherApiKey}&units=imperial`;
+        
+        const response = await axios.get(url);
+        const data = response.data;
+
+        // Map OpenWeatherMap condition to match frontend expectations
+        let condition = data.weather[0].main;
+        if (condition === 'Clear') condition = 'Sunny';
+        else if (condition === 'Clouds') {
+            if (data.weather[0].description === 'few clouds') condition = 'Partly Cloudy';
+            else condition = 'Cloudy';
+        }
+
         res.json({
             success: true,
             weather: {
-                temp: Math.floor(Math.random() * 30) + 10, // Random temperature between 10-40°C
-                condition: ['Sunny', 'Cloudy', 'Rainy', 'Partly Cloudy'][Math.floor(Math.random() * 4)],
-                humidity: Math.floor(Math.random() * 60) + 30, // Random humidity between 30-90%
-                wind: Math.floor(Math.random() * 20) + 1 // Random wind speed between 1-20 km/h
+                temp: Math.round(data.main.temp),
+                condition: condition,
+                humidity: data.main.humidity,
+                wind: Math.round(data.wind.speed) // wind speed in mph
             }
         });
     } catch (error) {
-        console.error('Weather API error:', error);
+        console.error('Weather API error:', error.response?.data || error.message);
         res.status(500).json({ success: false, error: 'Failed to fetch weather data' });
     }
 });
